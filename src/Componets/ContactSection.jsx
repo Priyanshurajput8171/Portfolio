@@ -1,3 +1,4 @@
+import { ToastContainer, toast } from 'react-toastify';
 import {
   Instagram,
   Linkedin,
@@ -8,27 +9,48 @@ import {
   Twitch,
   Twitter,
 } from "lucide-react";
+
+
+
+import { Button, Textarea, Label, TextInput } from "flowbite-react";
 import { cn } from "@/lib/utils";
 // import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
+import axios from "axios";
 
 export const ContactSection = () => {
-//   const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    setIsSubmitting(true);
-
-    setTimeout(() => {
-      toast({
-        title: "Message sent!",
-        description: "Thank you for your message. I'll get back to you soon.",
+  //   const { toast } = useToast();
+  const [formData, setFormData] = useState({
+  name: "",
+  email: "",
+  message: "",
+});
+console.log(formData)
+let saveEnquiry = (e) => {
+  e.preventDefault();
+  axios
+    .post("http://localhost:8000/api/website/enquiry/insert", formData)
+    .then((response) => {
+      console.log("Enquiry saved successfully:", response.data);
+      setFormData({
+        name: "",
+        email: "",
+        message: "",
       });
-      setIsSubmitting(false);
-    }, 1500);
-  };
+      toast.success("Enquiry saved successfully!");
+    })
+    .catch((error) => {
+      console.error("Error saving enquiry:", error);
+    });
+};
+let getChange = (e) => {
+  let inputName = e.target.name;
+  let inputValue = e.target.value;
+  let oldData = { ...formData };
+  oldData[inputName] = inputValue;
+  setFormData(oldData);
+};
+ 
   return (
     <section id="contact" className="py-24 px-4 relative bg-secondary/30">
       <div className="container mx-auto max-w-5xl">
@@ -93,10 +115,16 @@ export const ContactSection = () => {
             <div className="pt-8">
               <h4 className="font-medium mb-4"> Connect With Me</h4>
               <div className="flex space-x-4 justify-center">
-                <a href="#" target="_blank">
+                <a
+                  href="https://www.linkedin.com/in/priyanshu-rajput-9a6949248/"
+                  target="_blank"
+                >
                   <Linkedin />
                 </a>
-                <a href="#" target="_blank">
+                <a
+                  href="https://www.instagram.com/priyanshu_rajpuutt/"
+                  target="_blank"
+                >
                   <Instagram />
                 </a>
               </div>
@@ -105,74 +133,62 @@ export const ContactSection = () => {
 
           <div
             className="bg-card p-8 rounded-lg shadow-xs"
-            onSubmit={handleSubmit}
           >
+            <ToastContainer/>
             <h3 className="text-2xl font-semibold mb-6"> Send a Message</h3>
 
-            <form className="space-y-6">
+            <form
+              className="flex max-w-md flex-col gap-4"
+              onSubmit={saveEnquiry}
+            >
               <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium mb-2"
-                >
-                  {" "}
-                  Your Name
-                </label>
-                <input
-                  type="text"
+                <div className="mb-2 block">
+                  <Label className="text-white" htmlFor="name">
+                    Your Name
+                  </Label>
+                </div>
+                <TextInput
+                  onChange={getChange}
+                  value={formData?.name || ""}  
+                  className="bg-transparent"
                   id="name"
+                  type="text"
                   name="name"
+                  placeholder="Name"
                   required
-                  className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden foucs:ring-2 focus:ring-primary"
-                  placeholder="eg. Priyanshu Rajput"
                 />
               </div>
-
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium mb-2"
-                >
-                  {" "}
-                  Your Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
+                <div className="mb-2 block">
+                  <Label htmlFor="email" className="text-white">
+                    Email
+                  </Label>
+                </div>
+                <TextInput
+                  onChange={getChange}
+                  value={formData?.email || ""}  
+                  id="password1"
                   name="email"
+                  type="email"
+                  placeholder="Email"
                   required
-                  className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden foucs:ring-2 focus:ring-primary"
-                  placeholder="Your Email"
                 />
               </div>
-
-              <div>
-                <label
-                  htmlFor="message"
-                  className="block text-sm font-medium mb-2"
-                >
-                  {" "}
-                  Your Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  required
-                  className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden foucs:ring-2 focus:ring-primary resize-none"
-                  placeholder="Hello, I'd like to talk about..."
-                />
+              <div className="mb-2 block">
+                <Label className="text-white" htmlFor="name">
+                  Message
+                </Label>
               </div>
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className={cn(
-                  "cosmic-button w-full flex items-center justify-center gap-2"
-                )}
-              >
-                {isSubmitting ? "Sending..." : "Send Message"}
-                <Send size={16} />
-              </button>
+              <Textarea
+               onChange={getChange}
+               value={formData?.message || ""}  
+                id="comment"
+                name="message"
+                placeholder="Leave a comment..."
+                required
+                rows={4}
+              />
+              <Button type="submit">Submit</Button>
             </form>
           </div>
         </div>

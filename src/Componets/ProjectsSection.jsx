@@ -23,12 +23,12 @@ const projects = [
   },
   {
     id: 1,
-    title: "First Portfolio",
+    title: "Disney Clone",
     Description:
-      "A personal portfolio showcasing my skills and projects. when i was in 1st year of my college.",
-    image: "./src/ProjectsImg/firstPortfolio.png",
-    tags: ["React", "tailwind", "javascript"],
-    github: "#",
+      "DisneyPlus clone with modern UI and responsive interface.",
+    image: "./src/ProjectsImg/disneyPlus.png",
+    tags: ["React", "tailwind", "javascript" , "react"],
+    github: "https://github.com/Priyanshurajput8171/Disney-clone-by-HTML-TAILWIND-REACT",
   },
 ];
 
